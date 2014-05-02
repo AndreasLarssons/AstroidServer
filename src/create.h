@@ -11,10 +11,9 @@
 
 struct astroid{
 	int id;
-	float x;
-	float y;
-	float velocity;
-	SDL_Surface *image;
+	int x;
+	int y;
+	int velocity;
 
 
 }typedef astroid;

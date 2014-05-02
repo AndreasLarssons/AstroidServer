@@ -17,7 +17,7 @@ struct node{
 
 //This function adds an astroid at the beginning of the linked list
 //Example call: add_item_beginning(&root, image, 0 , 0 , 1); where root is a pointer to a node and image is a pointer to an image
-extern void add_item_beginning(node ** root, SDL_Surface *image, float x, float y, int id);
+extern void add_item_beginning(node ** root, float x, float y, int id);
 
 
 //This function search and removes the node with the astroid id given
@@ -36,6 +36,6 @@ extern int search_id();
 
 //This function fills the list with Astroids and specifies the x,y and takes an image array. Note adds item at the beginning of the list
 //Example call: fill_list(&root,images,0,0,10); where root is a pointer to a node and images is an array of pointers to SDL_Surface
-extern void fill_list(node **root, SDL_Surface *image[], float x, float y, int size);
+extern void fill_list(node **root, float x, float y, int size);
 
 #endif /* HELPERFUNC_H_ */

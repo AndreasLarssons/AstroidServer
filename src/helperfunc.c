@@ -15,20 +15,20 @@ void create_linked_list(node *root){
 	root->next = NULL;
 }
 
-void fill_list(node **root, SDL_Surface *image[], float x, float y, int size){
+void fill_list(node **root, float x, float y, int size){
 	int i;
 	for (i = 0; i < size; i++){
-		add_item_beginning(root, image[0], x * i, y * i, i);
+		add_item_beginning(root, x, y, i);
 	}
 }
 
-void add_item_beginning(node ** root, SDL_Surface *image, float x, float y, int id){
+void add_item_beginning(node ** root, float x, float y, int id){
 	node * new_node;
 	astroid * new_astroid;
 	new_node = malloc (sizeof(node));
 	new_astroid = malloc(sizeof(astroid));
 	new_astroid->id = id;
-	new_astroid->image = image;
+//	new_astroid->image = image;
 	new_astroid->velocity = VELOCITY;
 	new_astroid->x = x;
 	new_astroid->y = y;
