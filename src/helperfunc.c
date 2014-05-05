@@ -47,6 +47,7 @@ int search_id(node * root, int id){
 		}
 		current = current->next;
 		pos++;
+		printf("%d\n", pos);
 	}
 	return -1;
 

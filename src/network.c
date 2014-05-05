@@ -76,9 +76,9 @@ int forward_data(char msg[], int my_id, char format_string[]) {
 
 		if (i != my_id) {
 			if (send_data(msg, connected_clients[i], "#%d|%d|%d#") == -1) {
-				return 0;
+				return -1;
 			}
-			printf("%s, %d\n", msg, my_id);
+			//printf("%s, %d\n", msg, my_id);
 		}
 		i++;
 	}
@@ -115,14 +115,18 @@ int connected_client(void *data) {
 	send_data(handshake, socket, "#|%d|#");
 	ready = 1;
 	while (1) {
-		SDL_Delay(100);
-		read_data(msg, socket, &id, &x, &y, "#%d|%d|%d#");
+		SDL_Delay(10);
+		if (read_data(msg, socket, &id, &x, &y, "#%d|%d|%d#") == -1){
+			return 0;
+		}
 		printf("%s\n",msg);
 //		answer = client_data;
 		//SDL_Delay(100);
 //		sscanf(*answer, "#%d|%d|%d#", *id_global, &x, &y);
 //		sprintf(answer, "#%d|%d|%d#", id, x + 100, y + 100);
-		forward_data(msg,id, "#%d|%d|%d#");
+		if (forward_data(msg,id, "#%d|%d|%d#") == -1){
+			return 0;
+		}
 	}
 
 	return 0;

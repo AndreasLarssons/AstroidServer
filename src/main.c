@@ -24,6 +24,7 @@ int main(int argc, char **arg) {
 	node *root = NULL;
 	create_linked_list(root);
 	fill_list(&root,0,0,10);
+//	printf("%d\n", search_id(root, 10));
 	SDL_Thread *running_threads[4] = {NULL};
 	int counter = 0;
 	TCPsocket socket;
