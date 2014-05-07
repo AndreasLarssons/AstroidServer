@@ -35,7 +35,7 @@ int control_astroids(void *data) {
 					break;
 				} else {
 					send_data(answer, connected_clients[a], "*%d|%d|%d*");
-					printf("%s\n", answer);
+					//printf("%s\n", answer);
 				}
 			}
 			iterate->astroid.x += iterate->astroid.velocity;

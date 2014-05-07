@@ -75,7 +75,7 @@ int forward_data(char msg[], int my_id, char format_string[]) {
 	while (connected_clients[i] != NULL) {
 
 		if (i != my_id) {
-			if (send_data(msg, connected_clients[i], "#%d|%d|%d#") == -1) {
+			if (send_data(msg, connected_clients[i], format_string) == -1) {
 				return -1;
 			}
 			//printf("%s, %d\n", msg, my_id);
@@ -111,20 +111,22 @@ int connected_client(void *data) {
 	char *client_data[10] = { NULL };
 	char msg[10];
 	int x = 0, y = 0, id = 0;
+	double angle = 0;
 	sprintf(handshake, "#|%d|#", input_data->id);
 	send_data(handshake, socket, "#|%d|#");
 	ready = 1;
 	while (1) {
 		SDL_Delay(10);
-		if (read_data(msg, socket, &id, &x, &y, "#%d|%d|%d#") == -1){
-			return 0;
+		if (read_data(msg, socket, &id, &x, &y, &angle, "#%d|%d|%d|%d#") == -1){
+			//return 0;
 		}
-		printf("%s\n",msg);
+		//printf("%s\n", msg);
+		//printf("%s\n",msg);
 //		answer = client_data;
 		//SDL_Delay(100);
 //		sscanf(*answer, "#%d|%d|%d#", *id_global, &x, &y);
 //		sprintf(answer, "#%d|%d|%d#", id, x + 100, y + 100);
-		if (forward_data(msg,id, "#%d|%d|%d#") == -1){
+		if (forward_data(msg,id, "#%d|%d|%d|%lf#") == -1){
 			return 0;
 		}
 	}
@@ -135,7 +137,6 @@ int connected_client(void *data) {
 int send_data(char msg[], TCPsocket socket, char format_string[]) {
 
 	int len, result;
-
 	len = strlen(msg) + 1; // add one for the terminating NULL
 	result = SDLNet_TCP_Send(socket, msg, len);
 	if (result < len) {
@@ -145,7 +146,7 @@ int send_data(char msg[], TCPsocket socket, char format_string[]) {
 	}
 	return 0;
 }
-int read_data(char msg[], TCPsocket socket, int *id, int *x, int *y,
+int read_data(char msg[], TCPsocket socket, int *id, int *x, int *y, double *angle,
 		char format_string[]) {
 	int len, result;
 
@@ -156,6 +157,8 @@ int read_data(char msg[], TCPsocket socket, int *id, int *x, int *y,
 		return -1;
 		// It may be good to disconnect sock because it is likely invalid now.
 	}
-	sscanf(msg, format_string, id, x, y);
+	if (sscanf(msg, format_string, id, x, y, angle) == 4){
+		return -1;
+	}
 	return 0;
 }
