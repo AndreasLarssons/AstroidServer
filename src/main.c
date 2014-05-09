@@ -24,6 +24,7 @@ int main(int argc, char **arg) {
 	node *root = NULL;
 	create_linked_list(root);
 	fill_list(&root,0,0,10);
+	set_astroid_pos(root, 10);
 //	printf("%d\n", search_id(root, 10));
 	SDL_Thread *running_threads[4] = {NULL};
 	int counter = 0;
@@ -32,8 +33,8 @@ int main(int argc, char **arg) {
 	astroid_data astroid_data;
 	astroid_data.size = 10;
 	astroid_data.ready = 0;
-	SDL_Thread * astroid_control = SDL_CreateThread(control_astroids, &astroid_data);
-	accept_connections(&socket, running_threads, &counter);
+	//SDL_Thread * astroid_control = SDL_CreateThread(control_astroids, &astroid_data);
+	accept_connections(&socket, running_threads, &counter, root);
 
 	return 0;
 }

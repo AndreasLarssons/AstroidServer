@@ -11,6 +11,9 @@
 #include "create.h"
 #include "helperfunc.h"
 #include "network.h"
+#define LEFT 3
+#define RIGHT 2
+#define UP 1
 struct astroid_data{
 	node * root;
 	int size;

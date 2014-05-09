@@ -14,6 +14,7 @@ struct astroid{
 	int x;
 	int y;
 	int velocity;
+	int direction;
 
 
 }typedef astroid;

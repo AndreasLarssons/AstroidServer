@@ -13,11 +13,13 @@ int control_astroids(void *data) {
 	create_linked_list(root);
 	fill_list(&root, 0, 0, 10);
 	node * iterate = root;
+
 	int i, a;
 	for (i = 0; i < 10; i++) {
 		iterate->astroid.x = rand()%1366 + 1;
 		iterate->astroid.y = 0;
-		iterate->astroid.velocity = set_x();
+		//iterate->astroid.velocity = set_x();
+		iterate->astroid.direction = rand()% 3 + 1;
 		iterate = iterate->next;
 	}
 	iterate = root;
@@ -29,7 +31,7 @@ int control_astroids(void *data) {
 	while (1) {
 		SDL_Delay(5);
 		for (i = 0; i < given_data->size; i++) {
-			sprintf(answer, "*%d|%d|%d*", iterate->astroid.id, iterate->astroid.x, iterate->astroid.y);
+			sprintf(answer, "*%d|%d|%d|%d*", iterate->astroid.id, iterate->astroid.x, iterate->astroid.y, iterate->astroid.direction);
 			for (a = 0; a < 4; a++) {
 				if (connected_clients[a] == NULL) {
 					break;
