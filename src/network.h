@@ -25,5 +25,6 @@ extern int forward_data();
 extern void fill_socket(TCPsocket *from[], TCPsocket * to[], int size);
 extern int **id_global;
 extern char **answer;
+extern int read_bullet_data();
 
 #endif /* NETWORK_H_ */

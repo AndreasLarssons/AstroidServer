@@ -116,19 +116,26 @@ int connected_client(void *data) {
 	send_data(handshake, socket, "#|%d|#");
 	ready = 1;
 	while (1) {
-		SDL_Delay(10);
-		if (read_data(msg, socket, &id, &x, &y, &angle, "#%d|%d|%d|%d#") == -1){
-			//return 0;
+		//SDL_Delay(10);
+		if (read_data(msg, socket, &id, &x, &y, &angle, "#%d|%d|%d|%d#")
+				== -1) {
+			if (forward_data(msg, id, "#%d|%d|%d|%lf#") == -1) {
+				return 0;
+			}
+		} else if (read_bullet_data(msg, "?%d|%d|%d|%d|%d?") == -1) {
+			if (forward_data(msg, id, "#%d|%d|%d|%lf#") == -1) {
+				return 0;
+			}
+
 		}
+
 		//printf("%s\n", msg);
 		//printf("%s\n",msg);
 //		answer = client_data;
 		//SDL_Delay(100);
 //		sscanf(*answer, "#%d|%d|%d#", *id_global, &x, &y);
 //		sprintf(answer, "#%d|%d|%d#", id, x + 100, y + 100);
-		if (forward_data(msg,id, "#%d|%d|%d|%lf#") == -1){
-			return 0;
-		}
+
 	}
 
 	return 0;
@@ -146,8 +153,8 @@ int send_data(char msg[], TCPsocket socket, char format_string[]) {
 	}
 	return 0;
 }
-int read_data(char msg[], TCPsocket socket, int *id, int *x, int *y, double *angle,
-		char format_string[]) {
+int read_data(char msg[], TCPsocket socket, int *id, int *x, int *y,
+		double *angle, char format_string[]) {
 	int len, result;
 
 	len = strlen(msg) + 1; // add one for the terminating NULL
@@ -157,7 +164,15 @@ int read_data(char msg[], TCPsocket socket, int *id, int *x, int *y, double *ang
 		return -1;
 		// It may be good to disconnect sock because it is likely invalid now.
 	}
-	if (sscanf(msg, format_string, id, x, y, angle) == 4){
+	if (sscanf(msg, format_string, id, x, y, angle) == 4) {
+		return -1;
+	}
+	return 0;
+}
+
+int read_bullet_data(char msg[], char format_string[]) {
+	int id, x, y, angle, slot;
+	if (sscanf(msg, format_string, &id, &slot, &x, &y, &angle) == 5) {
 		return -1;
 	}
 	return 0;
