@@ -26,5 +26,6 @@ extern void fill_socket(TCPsocket *from[], TCPsocket * to[], int size);
 extern int **id_global;
 extern char **answer;
 extern int read_bullet_data();
+extern int read_astroid_data();
 
 #endif /* NETWORK_H_ */

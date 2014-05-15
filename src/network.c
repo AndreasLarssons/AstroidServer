@@ -11,6 +11,7 @@ struct thread_data {
 	int slot;
 	int id;
 	int *ready;
+	node * root;
 
 }typedef thread_data;
 TCPsocket connected_clients[4] = { NULL };
@@ -24,6 +25,7 @@ TCPsocket connect() {
 		printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
 		exit(1);
 	}
+	ip.host = INADDR_ANY;
 
 	socket = SDLNet_TCP_Open(&ip);
 	if (!socket) {
@@ -33,7 +35,7 @@ TCPsocket connect() {
 	return socket;
 }
 void accept_connections(TCPsocket *socket, SDL_Thread *connected[],
-		int *counter) {
+		int *counter, node * root) {
 	TCPsocket acc_socket;
 	int open_slot = 0;
 	int count_slot = 0;
@@ -49,7 +51,7 @@ void accept_connections(TCPsocket *socket, SDL_Thread *connected[],
 		}
 		if (!acc_socket) {
 			//printf("SDLNet_TCP_Accept: %s\n", SDLNet_GetError());
-
+			SDLNet_TCP_Close(acc_socket);
 		} else {
 
 			if ((open_slot = check_open_slot()) != -1) {
@@ -57,6 +59,7 @@ void accept_connections(TCPsocket *socket, SDL_Thread *connected[],
 				data.socket = &acc_socket;
 				data.slot = open_slot;
 				data.id = id_counter;
+				data.root = root;
 				SDL_LockMutex(mutex);
 				connected_clients[count_slot] = acc_socket;
 				SDL_UnlockMutex(mutex);
@@ -114,6 +117,7 @@ int connected_client(void *data) {
 	double angle = 0;
 	sprintf(handshake, "#|%d|#", input_data->id);
 	send_data(handshake, socket, "#|%d|#");
+
 	ready = 1;
 	while (1) {
 		//SDL_Delay(10);
@@ -126,16 +130,11 @@ int connected_client(void *data) {
 			if (forward_data(msg, id, "#%d|%d|%d|%lf#") == -1) {
 				return 0;
 			}
-
+		} else if(read_astroid_data(msg, "*%d*", input_data->root) == -1){
+			if (forward_data(msg, id, "#%d|%d|%d|%lf#") == -1) {
+				return 0;
+			}
 		}
-
-		//printf("%s\n", msg);
-		//printf("%s\n",msg);
-//		answer = client_data;
-		//SDL_Delay(100);
-//		sscanf(*answer, "#%d|%d|%d#", *id_global, &x, &y);
-//		sprintf(answer, "#%d|%d|%d#", id, x + 100, y + 100);
-
 	}
 
 	return 0;
@@ -145,6 +144,7 @@ int send_data(char msg[], TCPsocket socket, char format_string[]) {
 
 	int len, result;
 	len = strlen(msg) + 1; // add one for the terminating NULL
+
 	result = SDLNet_TCP_Send(socket, msg, len);
 	if (result < len) {
 		printf("SDLNet_TCP_Send: %s\n", SDLNet_GetError());
@@ -175,5 +175,14 @@ int read_bullet_data(char msg[], char format_string[]) {
 	if (sscanf(msg, format_string, &id, &slot, &x, &y, &angle) == 5) {
 		return -1;
 	}
+	return 0;
+}
+
+int read_astroid_data(char msg[], char format_string[], node * root) {
+	int id;
+	if (sscanf(msg, format_string, &id) == 1) {
+		return -1;
+	}
+	remove_id(&root, id);
 	return 0;
 }

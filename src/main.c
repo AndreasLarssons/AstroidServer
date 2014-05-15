@@ -33,7 +33,7 @@ int main(int argc, char **arg) {
 	astroid_data.size = 10;
 	astroid_data.ready = 0;
 	SDL_Thread * astroid_control = SDL_CreateThread(control_astroids, &astroid_data);
-	accept_connections(&socket, running_threads, &counter);
+	accept_connections(&socket, running_threads, &counter, root);
 
 	return 0;
 }
