@@ -15,11 +15,7 @@ int control_astroids(void *data) {
 	node * iterate = root;
 	int i, a;
 	for (i = 0; i < 11; i++) {
-//			iterate->astroid.x = rand() % 1366 + 1;
-//			iterate->astroid.y = 0;
-//			iterate->astroid.velocity = 1;
-//			iterate = iterate->next;
-		iterate->astroid.x = i * 50;
+		iterate->astroid.x = i * 150;
 		iterate->astroid.y = rand() % 5 + 1;
 		iterate->astroid.velocity = 1;
 		iterate = iterate->next;
