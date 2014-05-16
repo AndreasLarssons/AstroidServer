@@ -44,6 +44,7 @@ void accept_connections(TCPsocket *socket, SDL_Thread *connected[],
 	SDL_mutex *mutex = SDL_CreateMutex();
 //	SDL_Thread *send_thread = SDL_CreateThread(forward_data, NULL);
 	while (error) {
+		SDL_Delay(3000);
 		acc_socket = SDLNet_TCP_Accept(*socket);
 		if (count_slot == 4) {
 			send_data("Error\0", acc_socket);
