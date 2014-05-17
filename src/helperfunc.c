@@ -53,20 +53,45 @@ int search_id(node * root, int id){
 
 }
 
-int remove_id(node ** root,int id){
+//int remove_id(node ** root,int id){
+//	node * current = *root;
+//	node * temp_node = NULL;
+//	int pos = search_id(*root, id);
+//	int i;
+//	for (i = 0; i < pos -1; i++){
+//		if (current->next == NULL){
+//			return -1;
+//		}
+//		current = current->next;
+//	}
+//	temp_node = current->next;
+//	current->next = temp_node->next;
+//	free(temp_node);
+//	return 0;
+//}
+
+int remove_id(node ** root, int id) {
 	node * current = *root;
 	node * temp_node = NULL;
 	int pos = search_id(*root, id);
 	int i;
-	for (i = 0; i < pos -1; i++){
-		if (current->next == NULL){
-			return -1;
+	//printf("%d\n", id);
+	if (pos > 0) {
+		for (i = 0; i < pos - 1; i++) {
+			if (current == NULL) {
+				printf("ERROR IN LINKED ARRAY!\n");
+				return -1;
+			}
+			current = current->next;
 		}
-		current = current->next;
+		temp_node = current->next;
+		current->next = temp_node->next;
+		free(temp_node);
+	} else if (pos == 0){
+		if (*root != NULL) {
+			*root = (*root)->next;
+			//free(current);
+		}
 	}
-	temp_node = current->next;
-	current->next = temp_node->next;
-	free(temp_node);
 	return 0;
 }
-

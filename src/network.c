@@ -131,7 +131,7 @@ int connected_client(void *data) {
 			if (forward_data(msg, id, "#%d|%d|%d|%lf#") == -1) {
 				return 0;
 			}
-		} else if(read_astroid_data(msg, "*%d*", input_data->root) == -1){
+		} else if(read_astroid_data(msg, "*%d|%d*", input_data->root) == -1){
 			if (forward_data(msg, id, "#%d|%d|%d|%lf#") == -1) {
 				return 0;
 			}
@@ -180,8 +180,8 @@ int read_bullet_data(char msg[], char format_string[]) {
 }
 
 int read_astroid_data(char msg[], char format_string[], node * root) {
-	int id;
-	if (sscanf(msg, format_string, &id) == 1) {
+	int id, slot;
+	if (sscanf(msg, format_string, &id, &slot) == 2) {
 		return -1;
 	}
 	remove_id(&root, id);

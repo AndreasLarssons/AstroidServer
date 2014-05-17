@@ -17,7 +17,7 @@ int control_astroids(void *data) {
 	for (i = 0; i < 11; i++) {
 		iterate->astroid.x = i * 150;
 		iterate->astroid.y = rand() % 5 + 1;
-		iterate->astroid.velocity = 1;
+		iterate->astroid.velocity = rand()%2 +1;
 		iterate = iterate->next;
 	}
 	iterate = root;
