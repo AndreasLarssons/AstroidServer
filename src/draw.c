@@ -4,18 +4,22 @@
  *  Created on: 2 maj 2014
  *      Author: andreas
  */
-
+#include <SDL/SDL_framerate.h>
 #include "draw.h"
+
 
 int control_astroids(void *data) {
 	astroid_data *given_data = (astroid_data *) data;
-	set_asteroids(given_data->root);
-	node *iterate = given_data->root;
 
+	FPSmanager manager = { 0 };
+	SDL_initFramerate(&manager);
+	SDL_setFramerate(&manager, 60);
 
 	while(1){
 		update_asteroids(given_data->root);
+		SDL_framerateDelay(&manager);
 	}
+	return 0;
 }
 
 void update_asteroids(node *root) {

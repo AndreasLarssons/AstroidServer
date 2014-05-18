@@ -125,6 +125,7 @@ int connected_client(void *data) {
 		sprintf(msg, "*%d|%d|%d|%d*", tmp->astroid.id, tmp->astroid.x,
 				tmp->astroid.y, tmp->astroid.velocity);
 		send_data(msg, socket, "*%d|%d|%d|%d*");
+		tmp = tmp->next;
 		SDL_Delay(10);
 	}
 

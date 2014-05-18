@@ -8,6 +8,7 @@
 #include <SDL/SDL_net.h>
 #include <SDL/SDL_thread.h>
 #include <stdlib.h>
+#include <SDL/SDL_framerate.h>
 #include "network.h"
 #include "create.h"
 #include "draw.h"
@@ -24,7 +25,7 @@ int main(int argc, char **arg) {
 	node *root = NULL;
 	create_linked_list(root);
 	fill_list(&root,0,0,11);
-	//set_asteroids(root);
+	set_asteroids(root);
 //	printf("%d\n", search_id(root, 10));
 	SDL_Thread *running_threads[4] = {NULL};
 	int counter = 0;
