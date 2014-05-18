@@ -95,3 +95,18 @@ int remove_id(node ** root, int id) {
 	}
 	return 0;
 }
+
+void set_asteroids(node *root) {
+	node * iterate = root;
+	int i;
+	for (i = 0; i < 11; i++) {
+		if (iterate != NULL) {
+			if (i != 0) {
+				iterate->astroid.x = i * 150;
+				iterate->astroid.y = rand() % 5 + 1;
+				iterate->astroid.velocity = rand() % 2 + 1;
+				iterate = iterate->next;
+			}
+		}
+	}
+}

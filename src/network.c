@@ -111,6 +111,7 @@ int connected_client(void *data) {
 	thread_data *input_data = (thread_data *) data;
 	TCPsocket socket = *input_data->socket;
 	int my_slot = input_data->slot;
+	int i = 0;
 	char handshake[10];
 	char *client_data[10] = { NULL };
 	char msg[10];
@@ -118,6 +119,14 @@ int connected_client(void *data) {
 	double angle = 0;
 	sprintf(handshake, "#|%d|#", input_data->id);
 	send_data(handshake, socket, "#|%d|#");
+	SDL_Delay(10);
+	node * tmp = input_data->root;
+	for (i = 0; i < 11; i++) {
+		sprintf(msg, "*%d|%d|%d|%d*", tmp->astroid.id, tmp->astroid.x,
+				tmp->astroid.y, tmp->astroid.velocity);
+		send_data(msg, socket, "*%d|%d|%d|%d*");
+		SDL_Delay(10);
+	}
 
 	ready = 1;
 	while (1) {
@@ -131,7 +140,7 @@ int connected_client(void *data) {
 			if (forward_data(msg, id, "#%d|%d|%d|%lf#") == -1) {
 				return 0;
 			}
-		} else if(read_astroid_data(msg, "*%d|%d*", input_data->root) == -1){
+		} else if (read_astroid_data(msg, "*%d|%d*", input_data->root) == -1) {
 			if (forward_data(msg, id, "#%d|%d|%d|%lf#") == -1) {
 				return 0;
 			}

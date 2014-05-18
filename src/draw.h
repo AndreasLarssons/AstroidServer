@@ -19,6 +19,7 @@ struct astroid_data{
 extern int control_astroids();
 extern int set_y();
 extern int set_x();
+extern void update_asteroids();
 extern TCPsocket connected_clients[4];
 extern int ready;
 #endif /* DRAW_H_ */

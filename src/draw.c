@@ -9,38 +9,25 @@
 
 int control_astroids(void *data) {
 	astroid_data *given_data = (astroid_data *) data;
-	node *root = NULL;
-	create_linked_list(root);
-	fill_list(&root, 0, 0, 11);
+	set_asteroids(given_data->root);
+	node *iterate = given_data->root;
+
+
+	while(1){
+		update_asteroids(given_data->root);
+	}
+}
+
+void update_asteroids(node *root) {
 	node * iterate = root;
 	int i, a;
-	for (i = 0; i < 11; i++) {
-		iterate->astroid.x = i * 150;
-		iterate->astroid.y = rand() % 5 + 1;
-		iterate->astroid.velocity = rand()%2 +1;
-		iterate = iterate->next;
-	}
-	iterate = root;
-	char answer[10];
-	while (ready == 0) {
-		SDL_Delay(100);
-	}
-	int x = rand() % 1366 + 1, y = rand() % 768 + 1;
-	while (1) {
-		SDL_Delay(5);
-		for (i = 0; i < given_data->size; i++) {
-			if (i != 0) {
-				sprintf(answer, "*%d|%d|%d*", iterate->astroid.id,
-						iterate->astroid.x, iterate->astroid.y);
-				for (a = 0; a < 4; a++) {
-					if (connected_clients[a] == NULL) {
-						break;
-					} else {
-						send_data(answer, connected_clients[a], "*%d|%d|%d*");
-						printf("%s\n", answer);
-					}
-				}
 
+	iterate = root;
+	int x = rand() % 1366 + 1, y = rand() % 768 + 1;
+	SDL_Delay(5);
+	for (i = 0; i < 11; i++) {
+		if (iterate != NULL) {
+			if (i != 0) {
 				iterate->astroid.x += iterate->astroid.velocity;
 				iterate->astroid.y += iterate->astroid.velocity;
 				if (iterate->astroid.y > 740) {
@@ -51,9 +38,8 @@ int control_astroids(void *data) {
 			}
 			iterate = iterate->next;
 		}
-		iterate = root;
 	}
-	return 0;
+	iterate = root;
 }
 
 int set_x() {
