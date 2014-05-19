@@ -136,7 +136,7 @@ int connected_client(void *data) {
 	ready = 1;
 	while (1) {
 		//SDL_Delay(10);
-		if (read_data(msg, socket, &id, &x, &y, &angle, "#%d|%d|%d|%d#")
+		if (read_data(msg, socket, &id, &x, &y, &angle, "#%d|%d|%d|%d|%d|%d#")
 				== -1) {
 			if (forward_data(msg, id, "#%d|%d|%d|%lf#") == -1) {
 				return 0;
@@ -181,7 +181,7 @@ int read_data(char msg[], TCPsocket socket, int *id, int *x, int *y,
 		return -1;
 		// It may be good to disconnect sock because it is likely invalid now.
 	}
-	if (sscanf(msg, format_string, id, x, y, angle) == 4) {
+	if (sscanf(msg, format_string, id, x, y, angle) == 6) {
 		return -1;
 	}
 	return 0;
