@@ -23,11 +23,10 @@ int control_astroids(void *data) {
 }
 
 void update_asteroids(node *root) {
-	node * iterate = root;
-	int i, a;
+	node * iterate = NULL;
+	int i;
 
 	iterate = root;
-	int x = rand() % 1366 + 1, y = rand() % 768 + 1;
 	SDL_Delay(5);
 	for (i = 0; i < 11; i++) {
 		if (iterate != NULL) {
@@ -43,7 +42,6 @@ void update_asteroids(node *root) {
 			iterate = iterate->next;
 		}
 	}
-	iterate = root;
 }
 
 int set_x() {

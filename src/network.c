@@ -122,13 +122,17 @@ int connected_client(void *data) {
 	SDL_Delay(10);
 	node * tmp = input_data->root;
 	for (i = 0; i < 11; i++) {
-		sprintf(msg, "*%d|%d|%d|%d*", tmp->astroid.id, tmp->astroid.x,
-				tmp->astroid.y, tmp->astroid.velocity);
-		send_data(msg, socket, "*%d|%d|%d|%d*");
-		tmp = tmp->next;
-		SDL_Delay(10);
+		if (tmp != NULL) {
+			sprintf(msg, "*%d|%d|%d|%d*", tmp->astroid.id, tmp->astroid.x,
+					tmp->astroid.y, tmp->astroid.velocity);
+			send_data(msg, socket, "*%d|%d|%d|%d*");
+			printf("Asteroid #%d: %s\n", tmp->astroid.id, msg);
+			tmp = tmp->next;
+			SDL_Delay(10);
+		}
 	}
 
+	printf("Server: Start receiving data\n");
 	ready = 1;
 	while (1) {
 		//SDL_Delay(10);
@@ -141,7 +145,9 @@ int connected_client(void *data) {
 			if (forward_data(msg, id, "#%d|%d|%d|%lf#") == -1) {
 				return 0;
 			}
-		} else if (read_astroid_data(msg, "*%d|%d*", input_data->root) == -1) {
+		} else if (read_astroid_data(msg, "*%d|%d|%d*", input_data->root)
+				== -1) {
+			printf("YO!\n");
 			if (forward_data(msg, id, "#%d|%d|%d|%lf#") == -1) {
 				return 0;
 			}
@@ -190,10 +196,10 @@ int read_bullet_data(char msg[], char format_string[]) {
 }
 
 int read_astroid_data(char msg[], char format_string[], node * root) {
-	int id, slot;
-	if (sscanf(msg, format_string, &id, &slot) == 2) {
+	int id, slot, asteroid;
+	if (sscanf(msg, format_string, &id, &asteroid, &slot) == 3) {
+		remove_id(&root, asteroid);
 		return -1;
 	}
-	remove_id(&root, id);
 	return 0;
 }

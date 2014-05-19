@@ -84,6 +84,7 @@ int remove_id(node ** root, int id) {
 			}
 			current = current->next;
 		}
+		printf("Server: Asteroid #%d is dead\n", current->astroid.id);
 		temp_node = current->next;
 		current->next = temp_node->next;
 		free(temp_node);
