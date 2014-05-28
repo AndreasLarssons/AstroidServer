@@ -9,7 +9,7 @@
 struct thread_data {
 	TCPsocket *socket;
 	int slot;
-	int id;
+	int *id;
 	int *ready;
 	node * root;
 
@@ -49,7 +49,7 @@ void accept_connections(TCPsocket *socket, SDL_Thread *connected[],
 	while (error) {
 		SDL_Delay(3000);
 		acc_socket = SDLNet_TCP_Accept(*socket);
-		if (count_slot == 4) {
+		if (count_slot == 5) {
 			send_data("Error\0", acc_socket);
 			SDLNet_TCP_Close(acc_socket);
 		}
@@ -62,7 +62,7 @@ void accept_connections(TCPsocket *socket, SDL_Thread *connected[],
 				thread_data data;
 				data.socket = &acc_socket;
 				data.slot = open_slot;
-				data.id = id_counter;
+				data.id = &id_counter;
 				data.root = root;
 				SDL_LockMutex(mutex);
 				connected_clients[count_slot] = acc_socket;
@@ -114,13 +114,13 @@ int connected_client(void *data) {
 	thread_data *input_data = (thread_data *) data;
 	TCPsocket socket = *input_data->socket;
 	int my_slot = input_data->slot;
-	int i = 0;
+	int i = 0, connection_state = -1;
 	char handshake[10];
 	char *client_data[10] = { NULL };
 	char msg[10];
 	int x = 0, y = 0, id = 0;
 	double angle = 0;
-	sprintf(handshake, "#|%d|#", input_data->id);
+	sprintf(handshake, "#|%d|#", *input_data->id);
 	send_data(handshake, socket, "#|%d|#");
 	SDL_Delay(10);
 	node * tmp = input_data->root;
@@ -139,21 +139,29 @@ int connected_client(void *data) {
 	ready = 1;
 	while (1) {
 		//SDL_Delay(10);
-		if (read_data(msg, socket, &id, &x, &y, &angle, "#%d|%d|%d|%d|%d|%d#")
-				== -1) {
+		connection_state = read_data(msg, socket, &id, &x, &y, &angle,
+				"#%d|%d|%d|%d|%d|%d#");
+		if (connection_state == -1) {
 			if (forward_data(msg, id, "#%d|%d|%d|%lf#") == -1) {
-				return 0;
+				//return 0;
 			}
 		} else if (read_bullet_data(msg, "?%d|%d|%d|%d|%d?") == -1) {
 			if (forward_data(msg, id, "#%d|%d|%d|%lf#") == -1) {
-				return 0;
+				//return 0;
 			}
 		} else if (read_astroid_data(msg, "*%d|%d|%d*", input_data->root)
 				== -1) {
 			printf("YO!\n");
 			if (forward_data(msg, id, "#%d|%d|%d|%lf#") == -1) {
-				return 0;
+				//return 0;
 			}
+		} else if (connection_state == 0) {
+			// Connection is lost! Kill thread!
+			count_thread[my_slot] = 0;
+			SDLNet_TCP_Close(socket);
+			*input_data->id -= 1;
+			printf("Server: %d", *input_data->id);
+			return 0;
 		}
 	}
 
@@ -173,15 +181,15 @@ int send_data(char msg[], TCPsocket socket, char format_string[]) {
 	}
 	return 0;
 }
-int read_data(char msg[], TCPsocket socket, int *id, int *x, int *y,
-		double *angle, char format_string[]) {
+int read_data(char msg[], TCPsocket socket, int *id, int *x,
+		int *y, double *angle, char format_string[]) {
 	int len, result;
 
 	len = strlen(msg) + 1; // add one for the terminating NULL
 	result = SDLNet_TCP_Recv(socket, msg, 100);
 	if (result < len) {
 		printf("SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
-		return -1;
+		return 0;
 		// It may be good to disconnect sock because it is likely invalid now.
 	}
 	if (sscanf(msg, format_string, id, x, y, angle) == 6) {
