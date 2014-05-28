@@ -20,8 +20,11 @@ int count_thread[4] = { 0 };
 TCPsocket connect() {
 	IPaddress ip;
 	TCPsocket socket;
+	int port = 0;
+	printf("Enter port to listen to: ");
+	scanf("%d", &port);
 
-	if (SDLNet_ResolveHost(&ip, NULL, 9999) == -1) {
+	if (SDLNet_ResolveHost(&ip, NULL, port) == -1) {
 		printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
 		exit(1);
 	}
