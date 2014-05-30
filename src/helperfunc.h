@@ -38,6 +38,7 @@ extern int search_id();
 //Example call: fill_list(&root,images,0,0,10); where root is a pointer to a node and images is an array of pointers to SDL_Surface
 extern void fill_list(node **root, float x, float y, int size);
 
+//This function sets all asteroid's start position and velocity.
 extern void set_asteroids();
 
 #endif /* HELPERFUNC_H_ */

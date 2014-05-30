@@ -16,9 +16,14 @@ struct astroid_data{
 	int size;
 	int *ready;
 }typedef astroid_data;
+
+// Thread function that updates asteroids 60 times a second.
 extern int control_astroids();
+
 extern int set_y();
 extern int set_x();
+
+// update asteroids coordinates.
 extern void update_asteroids();
 extern TCPsocket connected_clients[4];
 extern int ready;

@@ -103,7 +103,7 @@ void set_asteroids(node *root) {
 	for (i = 0; i < 11; i++) {
 		if (iterate != NULL) {
 			if (i != 0) {
-				iterate->astroid.x = i * 150;
+				iterate->astroid.x = i * 130;
 				iterate->astroid.y = rand() % 5 + 1;
 				iterate->astroid.velocity = rand() % 2 + 1;
 				iterate = iterate->next;
